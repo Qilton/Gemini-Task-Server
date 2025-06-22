@@ -45,7 +45,7 @@ export const emailWebhook = async (req: Request, res: Response) => {
       await db.insert(userTable).values({
         clerkId: user_id,
         email: email_address,
-        username: username, 
+        username: username|| email_address.split('@')[0],
         emailVerified: true,
         profileImageUrl: '', 
         createdAt: new Date(),
