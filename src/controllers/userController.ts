@@ -31,7 +31,7 @@ export const emailWebhook = async (req: Request, res: Response) => {
   }
 
   if (evt.type === 'user.created') {
-    const { email_addresses, id, username } = evt.data;
+    const { email_addresses, id, username,profile_image_url } = evt.data;
     const email_address = email_addresses && email_addresses.length > 0 ? email_addresses[0].email_address : undefined;
 
     try {
@@ -48,7 +48,7 @@ export const emailWebhook = async (req: Request, res: Response) => {
         email: email_address,
         username: username|| email_address.split('@')[0],
         emailVerified: true,
-        profileImageUrl: '', 
+        profileImageUrl: profile_image_url || null, 
         createdAt: new Date(),
         updatedAt: new Date(),
       });
