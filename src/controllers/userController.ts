@@ -30,12 +30,13 @@ export const emailWebhook = async (req: Request, res: Response) => {
     return res.status(400).json({ error: 'Invalid signature' });
   }
 
-  if (evt.type === 'email.created') {
-    const { email_address, user_id,username } = evt.data; 
+  if (evt.type === 'user.created') {
+    const { email_addresses, id, username } = evt.data;
+    const email_address = email_addresses && email_addresses.length > 0 ? email_addresses[0].email_address : undefined;
 
     try {
       const existingUser = await db.query.userTable.findFirst({
-        where: eq(userTable.clerkId, user_id),
+        where: eq(userTable.clerkId,id),
       });
 
       if (existingUser) {
@@ -43,7 +44,7 @@ export const emailWebhook = async (req: Request, res: Response) => {
       }
 
       await db.insert(userTable).values({
-        clerkId: user_id,
+        clerkId: id,
         email: email_address,
         username: username|| email_address.split('@')[0],
         emailVerified: true,
